@@ -59,7 +59,7 @@ const htmlmodalcontent= ({id, title, description,url})=>{
         <div id=${id}>
              ${
                 url &&
-                `img srrc=${url} alt="card image cap" class="img-fluid mb-3" />`
+                `img src=${url} alt="card image cap" class="img-fluid mb-3" />`
              }
              <strong class="text-sm text-muted">Created on ${date.toDateString()} </strong>
              <h2 class="my-3">${title}</h2>
@@ -68,17 +68,35 @@ const htmlmodalcontent= ({id, title, description,url})=>{
     `
 }
 
-const updateLocalStorage= () =>{
-    localStorage.setItem("task",JSON.stringify({
+const updateLocalStorage = () => {
+    localStorage.setItem('task',JSON.stringify({
         tasks: state.taslLast
     }))
 }
 
-const loadInitialData = ()=>{
+const loadInitialData = () => {
     const localStortageCopy= JSON.parse(localStorage.tasks);
     if(localStortageCopy) state.taskList = localStortageCopy.tasks
 
-    state.taskList.map((carddatew) => {
-        taskcontents.insertAdjacentHTML()
+    state.taskList.map((cardDate) => {
+        taskcontents.insertAdjacentHTML("beforeend",htmlTaskContent(cardDate))
     })
 }
+
+const handleSubmit = () => {
+    const id = `${Date.now()}`;
+    const input = {
+        url: document.getElementById('imageurl').value,
+        title: document.getElementById('Tasktitle').value,
+        description: document.getElementById('taskdescription').value,
+        type: document.getElementById('tags').value,
+    };
+    taskcontents.insertAdjacentElement("beforeend",htmlmodalcontent({
+        ...input,
+        id,
+    }))
+
+    state.taskList.push({...input,id});
+    updateLocalStorage();
+
+    }
